@@ -1,0 +1,57 @@
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Example User",
+  "email": "user@example.com",
+  "password": "Password123!"
+}
+
+###
+
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password123!"
+}
+
+###
+
+POST {{baseUrl}}/api/todos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Learn Express",
+  "description": "Complete the Todo API assignment",
+  "completed": false
+}
+
+###
+
+GET {{baseUrl}}/api/todos?search=Express&completed=false
+Authorization: Bearer {{token}}
+
+###
+
+GET {{baseUrl}}/api/todos/{{todoId}}
+Authorization: Bearer {{token}}
+
+###
+
+PUT {{baseUrl}}/api/todos/{{todoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Learn Express",
+  "description": "The Todo API is complete",
+  "completed": true
+}
+
+###
+
+DELETE {{baseUrl}}/api/todos/{{todoId}}
+Authorization: Bearer {{token}}
