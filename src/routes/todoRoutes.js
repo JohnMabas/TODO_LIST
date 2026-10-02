@@ -8,13 +8,15 @@ const {
   validateTodoQuery,
 } = require("../validators/todoValidator");
 
-const router = express.Router();
+module.exports = function createTodoRoutes() {
+  const router = express.Router();
 
-router.use(authenticate);
-router.post("/", validate(validateCreateTodo), todoController.create);
-router.get("/", validate.query(validateTodoQuery), todoController.list);
-router.get("/:id", todoController.getById);
-router.put("/:id", validate(validateUpdateTodo), todoController.update);
-router.delete("/:id", todoController.delete);
+  router.use(authenticate);
+  router.post("/", validate(validateCreateTodo), todoController.create);
+  router.get("/", validate.query(validateTodoQuery), todoController.list);
+  router.get("/:id", todoController.getById);
+  router.put("/:id", validate(validateUpdateTodo), todoController.update);
+  router.delete("/:id", todoController.delete);
 
-module.exports = router;
+  return router;
+};

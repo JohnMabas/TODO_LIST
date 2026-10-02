@@ -1,15 +1,14 @@
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
 const asyncHandler = require("../utils/asyncHandler");
-const userStore = require("../data/users");
+const bcrypt = require("bcryptjs");
+const userRepository = require("../repositories/userRepository");
 const { jwtSecret, jwtExpiresIn } = require("../config/env");
 
 const BCRYPT_SALT_ROUNDS = 10;
 
 function toPublicUser(user) {
-  const { password, ...publicUser } = user;
-  return publicUser;
+  return userRepository.toPublicUser(user);
 }
 
 function createToken(user) {
@@ -27,13 +26,9 @@ function createToken(user) {
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.validatedBody;
-
-  if (userStore.findUserByEmail(email)) {
-    throw new AppError("Email is already registered.", 409);
-  }
-
   const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-  const user = userStore.createUser({
+
+  const user = await userRepository.createUser({
     name,
     email,
     password: hashedPassword,
@@ -49,7 +44,7 @@ exports.register = asyncHandler(async (req, res) => {
 
 exports.login = asyncHandler(async (req, res) => {
   const { email, password } = req.validatedBody;
-  const user = userStore.findUserByEmail(email);
+  const user = await userRepository.findUserByEmail(email);
 
   if (!user) {
     throw new AppError("Invalid credentials.", 401);

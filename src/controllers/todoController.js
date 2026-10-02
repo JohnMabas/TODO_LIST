@@ -1,11 +1,11 @@
 const AppError = require("../utils/AppError");
 const asyncHandler = require("../utils/asyncHandler");
-const todoStore = require("../data/todos");
+const todoRepository = require("../repositories/todoRepository");
 const { validateTodoId } = require("../validators/todoValidator");
 
 exports.create = asyncHandler(async (req, res) => {
   const { title, description, completed } = req.validatedBody;
-  const todo = todoStore.createTodo({
+  const todo = await todoRepository.createTodo({
     title,
     description,
     completed,
@@ -20,7 +20,7 @@ exports.create = asyncHandler(async (req, res) => {
 });
 
 exports.list = asyncHandler(async (req, res) => {
-  const todos = todoStore.findTodosByUserId(req.user.id, req.validatedQuery);
+  const todos = await todoRepository.findTodosByUserId(req.user.id, req.validatedQuery);
 
   res.status(200).json({
     success: true,
@@ -31,7 +31,7 @@ exports.list = asyncHandler(async (req, res) => {
 
 exports.getById = asyncHandler(async (req, res) => {
   const id = validateTodoId(req.params.id);
-  const todo = todoStore.findTodoForUser(id, req.user.id);
+  const todo = await todoRepository.findTodoForUser(id, req.user.id);
 
   if (!todo) {
     throw new AppError("Todo not found.", 404);
@@ -46,7 +46,7 @@ exports.getById = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
   const id = validateTodoId(req.params.id);
-  const todo = todoStore.updateTodoForUser(id, req.user.id, req.validatedBody);
+  const todo = await todoRepository.updateTodoForUser(id, req.user.id, req.validatedBody);
 
   if (!todo) {
     throw new AppError("Todo not found.", 404);
@@ -61,7 +61,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.delete = asyncHandler(async (req, res) => {
   const id = validateTodoId(req.params.id);
-  const todo = todoStore.deleteTodoForUser(id, req.user.id);
+  const todo = await todoRepository.deleteTodoForUser(id, req.user.id);
 
   if (!todo) {
     throw new AppError("Todo not found.", 404);

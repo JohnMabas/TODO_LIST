@@ -1,3 +1,9 @@
+### Health
+
+GET {{baseUrl}}/health
+
+###
+
 POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
@@ -15,6 +21,32 @@ Content-Type: application/json
 {
   "email": "user@example.com",
   "password": "Password123!"
+}
+
+###
+
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{token}}
+
+###
+
+PATCH {{baseUrl}}/api/users/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Name"
+}
+
+###
+
+PUT {{baseUrl}}/api/users/me/password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password123!",
+  "newPassword": "NewPassword456!"
 }
 
 ###
@@ -54,4 +86,9 @@ Content-Type: application/json
 ###
 
 DELETE {{baseUrl}}/api/todos/{{todoId}}
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{baseUrl}}/api/users/me
 Authorization: Bearer {{token}}

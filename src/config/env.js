@@ -14,9 +14,16 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error("PORT must be an integer between 1 and 65535.");
 }
 
+const nodeEnv = process.env.NODE_ENV || "development";
+
+if (!["development", "production", "test"].includes(nodeEnv)) {
+  throw new Error("NODE_ENV must be one of: development, production, test.");
+}
+
 module.exports = {
   port,
   jwtSecret,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1h",
-  nodeEnv: process.env.NODE_ENV || "development",
+  nodeEnv,
+  isTest: nodeEnv === "test",
 };
